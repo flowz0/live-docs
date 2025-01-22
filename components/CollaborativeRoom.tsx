@@ -7,14 +7,11 @@ import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs"
 import ActiveCollaborators from "./ActiveCollaborators";
 import { useEffect, useRef, useState } from "react";
 import { Input } from "./ui/input";
-import { currentUser } from "@clerk/nextjs/server";
 import Image from "next/image";
 import { updateDocument } from "@/lib/actions/room.actions";
 import Loader from "./Loader";
 
-const CollaborativeRoom = ({ roomId, roomMetadata }: CollaborativeRoomProps) => {
-    const currentUserType = 'editor';
-
+const CollaborativeRoom = ({ roomId, roomMetadata, users, currentUserType }: CollaborativeRoomProps) => {
     const [documentTitle, setDocumentTitle] = useState(roomMetadata.title);
     const [editing, setEditing] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -103,10 +100,10 @@ const CollaborativeRoom = ({ roomId, roomMetadata }: CollaborativeRoomProps) => 
                             )}
 
                             {loading && <p className="text-sm text-gray-400">Saving...</p>}
-
                         </div>
                         <div className="flex w-full flex-1 justify-end gap-2 sm:gap-3">
                             <ActiveCollaborators />
+
                             <SignedOut>
                                 <SignInButton />
                             </SignedOut>
@@ -115,7 +112,7 @@ const CollaborativeRoom = ({ roomId, roomMetadata }: CollaborativeRoomProps) => 
                             </SignedIn>
                         </div>
                     </Header>
-                    <Editor />
+                    <Editor roomId={roomId} currentUserType={currentUserType} />
                 </div>
             </ClientSideSuspense>
         </RoomProvider>
